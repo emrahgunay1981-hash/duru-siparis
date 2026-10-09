@@ -52,13 +52,13 @@ input,textarea{background:var(--panel);border:1px solid var(--line);color:var(--
   <label class="f" for="ad">Adınız<input id="ad" placeholder="Ad Soyad"></label>
   <h2>Teslimat</h2>
   <div class="opts" role="radiogroup">
-    <label class="opt" for="t-ev"><input type="radio" name="t" id="t-ev" value="ev" checked><span>Eve teslim</span></label>
+    <label class="opt" for="t-ev"><input type="radio" name="t" id="t-ev" value="ev" checked><span>Eve teslim<br><small class="unit">3.500 ₺ ve üzeri</small></span></label>
     <label class="opt" for="t-dk"><input type="radio" name="t" id="t-dk" value="dk"><span>Dükkandan teslim al</span></label>
   </div>
   <label class="f" id="w-adres" for="adres">Teslim adresi<textarea id="adres" rows="2" placeholder="Mahalle, sokak, bina no, daire"></textarea></label>
   <label class="f" id="w-saat" for="saat" hidden>Teslim alma saati<input id="saat" type="time" value="12:00"></label>
   <label class="f" for="not">Not (isteğe bağlı)<input id="not" placeholder="Örn. akşam 6'dan sonra"></label>
-  <p class="note">Siparişiniz WhatsApp'tan doğrudan dükkana iletilir. Ödeme teslimatta yapılır.</p>
+  <p class="note">Siparişiniz WhatsApp'tan doğrudan dükkana iletilir. Ödeme teslimatta nakit veya kredi kartı ile yapılır.</p>
 </div>
 
 <div class="bar"><div class="bar-in">
@@ -94,7 +94,11 @@ function update(){
   for(const id in q){if(!q[id])continue;const {name,unit,price}=document.getElementById("i"+id)._data;
     const t=q[id]*price;sum+=t;n++;lines.push(`• ${name} (${unit}) x ${nq(q[id])} = ${fmt(t)}`);}
   document.getElementById("sum").textContent=fmt(sum);
-  document.getElementById("count").textContent=n?n+" çeşit ürün":"Ürün seçilmedi";
+  const MIN=3500, evSel=document.getElementById("t-ev").checked, adresYok=!document.getElementById("adres").value.trim();
+  let hint=n?n+" çeşit ürün":"Ürün seçilmedi", ok=n>0;
+  if(n&&evSel&&sum<MIN){hint=`Eve teslim için ${fmt(MIN-sum)} daha ekleyin`;ok=false;}
+  else if(n&&evSel&&adresYok){hint="Teslim adresini yazın";ok=false;}
+  document.getElementById("count").textContent=hint;
   const v=i=>document.getElementById(i).value.trim();
   const ev=document.getElementById("t-ev").checked;
   document.getElementById("w-adres").hidden=!ev; document.getElementById("w-saat").hidden=ev;
@@ -102,7 +106,7 @@ function update(){
   const msg=`Merhaba, sipariş vermek istiyorum:\n${lines.join("\n")}\nToplam: ${fmt(sum)}`+(v("ad")?`\nAd: ${v("ad")}`:"")+`\nTeslimat: ${tes}`+(v("not")?`\nNot: ${v("not")}`:"");
   const a=document.getElementById("send");
   a.href=`https://wa.me/${PHONE}?text=${encodeURIComponent(msg)}`;
-  a.setAttribute("aria-disabled",n?"false":"true");
+  a.setAttribute("aria-disabled",ok?"false":"true");
 }
 ["ad","adres","saat","not","t-ev","t-dk"].forEach(i=>{const e=document.getElementById(i);e.addEventListener("input",update);e.addEventListener("change",update);});
 update();
