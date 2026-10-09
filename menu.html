@@ -1,1 +1,65 @@
+<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Duru El Lezzetleri · Menü</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Alex+Brush&family=Marcellus&family=Nunito+Sans:wght@400;600;800&display=swap">
+<style>
+/* Layout: digital menu, sticky category chips, read-only price list */
+:root{
+  --bg:#0f0d0a; --panel:#1a1712; --line:#3a3226; --fg:#f3ece0; --muted:#b5a993;
+  --gold:#e3c26b; --gold-deep:#b8913a;
+  --f-script:"Alex Brush",cursive; --f-head:"Marcellus",Georgia,serif; --f-body:"Nunito Sans",system-ui,sans-serif;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--fg);font-family:var(--f-body);font-size:16px;line-height:1.5}
+.wrap{max-width:560px;margin:0 auto;padding-inline:16px;padding-block:28px 48px}
+header{text-align:center;display:grid;gap:4px;padding-bottom:16px}
+.brand{font-family:var(--f-head);font-size:1.9rem;letter-spacing:.06em;color:var(--gold)}
+.tag{font-family:var(--f-script);font-size:1.6rem;color:var(--muted)}
+.chips{position:sticky;top:env(safe-area-inset-top,0px);z-index:2;background:var(--bg);display:flex;gap:8px;overflow-x:auto;padding-block:10px;border-block:1px solid var(--line);scrollbar-width:none}
+.chips a{flex:none;color:var(--fg);text-decoration:none;border:1px solid var(--line);border-radius:999px;padding:6px 14px;font-size:.9rem;font-weight:600;white-space:nowrap}
+.chips a:focus-visible{outline:2px solid var(--gold)}
+h2{font-family:var(--f-head);font-weight:400;color:var(--gold);font-size:1.15rem;letter-spacing:.12em;text-transform:uppercase;margin:28px 0 4px;scroll-margin-top:70px}
+.item{display:flex;align-items:baseline;gap:8px;padding-block:12px;border-bottom:1px dashed var(--line)}
+.name{font-weight:600}
+.unit{display:block;font-size:.85rem;color:var(--muted);font-weight:400}
+.dots{flex:1;border-bottom:1px dotted var(--gold-deep);opacity:.5;min-width:12px;transform:translateY(-4px)}
+.price{font-variant-numeric:tabular-nums;color:var(--gold);font-weight:800;white-space:nowrap}
+.star{font-size:.7rem;color:var(--bg);background:var(--gold);border-radius:4px;padding:1px 6px;margin-left:6px;vertical-align:2px;font-weight:800;letter-spacing:.04em}
+footer{margin-top:32px;text-align:center;color:var(--muted);font-size:.9rem;display:grid;gap:6px}
+footer a{color:var(--gold)}
+</style></head><body>
+<div class="wrap">
+  <header>
+    <div class="brand">DURU EL LEZZETLERİ</div>
+    <div class="tag">Hijyen · Lezzet · Kalite</div>
+  </header>
+  <nav class="chips" id="chips"></nav>
+  <main id="menu"></main>
+  <footer>
+    <div>Siparişinizi görevlimize iletebilirsiniz.</div>
+    <div>Eve sipariş için: <a href="https://duru-siparis.vercel.app">duru-siparis.vercel.app</a></div>
+    <div>0507 805 38 78 · @duru.el.lezzetleri</div>
+  </footer>
+</div>
+<script>
+const MENU=[
+ ["Öne Çıkanlar",[["Baklava","tepsi (2.500 gr)",2500,1],["El açması börek, ıspanaklı-patatesli","tepsi (2.000 gr)",1200,1],["El açması börek, kıymalı","tepsi",1500,1],["İçli köfte","adet",120,1],["Mantı","kilo",850,1],["Yaprak sarması","kilo",850,1]]],
+ ["Tatlılar",[["Trileçe","tepsi",1500],["Kabak tatlısı","kilo",750],["Tartolet","kilo",1250]]],
+ ["Kek, Kurabiye, Poğaça",[["Kek","büyük kalıp",900],["Islak kek","borcam",1000],["Elmalı kurabiye","1 ölçü (30 adet)",1200],["Tuzlu kurabiye","1 ölçü",900],["Sakallı poğaça","1 ölçü (30 adet)",1200],["Mayalı poğaça","1 ölçü (30 adet)",900]]],
+ ["Diğer Lezzetler",[["Kısır","kilo",850],["Mercimek köfte","kilo",900],["Kuru dolma","kilo",1000],["Gül böreği (donuk)","adet",40],["Fellah köfte (donuk)","kilo",650]]]
+];
+const fmt=n=>n.toLocaleString("tr-TR")+" ₺";
+const menu=document.getElementById("menu"), chips=document.getElementById("chips");
+MENU.forEach(([cat,items],i)=>{
+  const id="k"+i;
+  const a=document.createElement("a");a.href="#"+id;a.textContent=cat;chips.append(a);
+  const h=document.createElement("h2");h.id=id;h.textContent=cat;menu.append(h);
+  items.forEach(([name,unit,price,star])=>{
+    const d=document.createElement("div");d.className="item";
+    d.innerHTML=`<div class="name">${name}<span class="unit">${unit}</span></div><span class="dots"></span><span class="price">${fmt(price)}</span>`;
+    menu.append(d);
+  });
+});
+</script>
+</body></html>
 
